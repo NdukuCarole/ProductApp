@@ -16,7 +16,8 @@ export const login = (username, password) => async (dispatch) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Login failed: ${response.statusText}`);
+      console.log(response)
+      throw new Error(`Login failed`);
     }
 
     // Assuming the server returns a user object and a token upon successful login

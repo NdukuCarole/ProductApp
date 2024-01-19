@@ -18,8 +18,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const { isLoggedIn, error } = useSelector((state) => state);
 
-  const handleLogin = () => {
-   
+  const handleLogin = (e) => {
+    e.preventDefault()
     dispatch(login(username, password));
   };
 
