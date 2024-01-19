@@ -1,34 +1,20 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/auth/login";
 import Product from "./components/products/product";
-
-const isAuthenticated = () => {
-  return localStorage.getItem("token") !== null;
-};
-
-const ProtectedRoute = ({ element, ...props }) => {
-  return isAuthenticated() ? (
-    element
-  ) : (
-    <Navigate to="/login" state={{ from: props.location.pathname }} replace />
-  );
-};
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={<ProtectedRoute element={<Product />} />}
-        />
+    
+
+          <Route exact path='/' element={<ProtectedRoute/>}>
+            <Route exact path='/dashboard' element={<Product/>}/>
+          </Route>
+        
       </Routes>
     </Router>
   );

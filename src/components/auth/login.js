@@ -10,7 +10,7 @@ import { login } from "../../redux/actions/authActions";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const history = useNavigate();
+  const navigate = useNavigate();
   // const [data, setData] = useState({});
   // const [picture, setPicture] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -36,9 +36,10 @@ const Login = () => {
 
   React.useEffect(() => {
     if (isLoggedIn) {
-      history.push('/dashboard');
+      console.log(isLoggedIn)
+      navigate('/dashboard');
     }
-  }, [isLoggedIn, history])
+  }, [isLoggedIn, navigate])
 
   return (
     <div className="login-container">
