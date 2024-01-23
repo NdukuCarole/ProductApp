@@ -1,98 +1,173 @@
-import React, { useState } from "react";
-// import "./styles.css";
-// import FacebookLogin from "react-facebook-login";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { addProduct, fetchProducts } from "../../redux/actions/productActions";
+import "./styles.css";
+import Modal from "react-modal";
+import AddProductForm from "./AddProductForm";
 
-import { useNavigate } from 'react-router-dom';
-
-import { login } from "../../redux/actions/authActions";
-
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const history = useNavigate();
-  // const [data, setData] = useState({});
-  // const [picture, setPicture] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
+const Products = () => {
   const dispatch = useDispatch();
-  const { isLoggedIn, error } = useSelector((state) => state);
+  const { products, error } = useSelector((state) => state.products);
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    dispatch(login(username, password));
+  const [sortBy, setSortBy] = useState("title");
+  const [filterByCategory, setFilterByCategory] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
   };
 
-  // const responseFacebook = (response) => {
-  //   console.log(response);
-  //   setData(response);
-  //   setPicture(response.picture.data.url);
-  //   if (response.accessToken) {
-  //     setLogin(true);
-  //   } else {
-  //     setLogin(false);
-  //   }
-  // };
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
 
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      console.log(isLoggedIn)
-      history.push('/dashboard');
-    }
-  }, [isLoggedIn, history])
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  const handleSort = (property) => {
+    setSortBy(property);
+  };
+
+  const handleFilter = (category) => {
+    setFilterByCategory(category);
+  };
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedProduct(null);
+    setIsModalOpen(false);
+  };
+
+  const handleAddProduct = (newProduct) => {
+   
+    dispatch(addProduct(newProduct));
+
+    setIsFormOpen(false);
+  };
+
+  const filteredProducts = products
+    .filter((product) =>
+      filterByCategory ? product.category === filterByCategory : true
+    )
+    .sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
 
   return (
-    <div className="login-container">
-      <div className="background">
-        <div className="shape"></div>
-        <div className="shape"></div>
-      </div>
-      <form>
-        <h3>Login Here</h3>
+    <div>
+      <h2>Products</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <label>Username</label>
-        <input
-          type="text"
-          placeholder="Username"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        ></input>
+      <div className="sort">
+        <label className="label">Sort By:</label>
+        <select className="select" onChange={(e) => handleSort(e.target.value)}>
+          <option value="title">Title</option>
+          <option value="price">Price</option>
+          <option value="">All</option>
+        </select>
 
-        <label>Password</label>
-        <input
-          type="password"
-          placeholder="Password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
+        <label className="label2">Filter By Category:</label>
+        <select className="select" onChange={(e) => handleFilter(e.target.value)}>
+          <option value="">All</option>
 
-        <button onClick={handleLogin}>
-          {" "}
-          {isLoading ? "Logging in..." : "Log In"}
+          {Array.from(new Set(products.map((product) => product.category))).map(
+            (category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            )
+          )}
+        </select>
+        <button className="button-3" role="button" onClick={handleOpenForm}>
+          Add Product
         </button>
-        <div className="social">
-          {/* <div class="go">
-            <i class="fab fa-google"></i>Sign In Google
-          </div>
-          <div class="fb">
-            <i class="fab fa-facebook"></i>Sign In Facebook
-          </div> */}
+      </div>
 
-          {/* <FacebookLogin
-            appId="339549065583499"
-            autoLoad={true}
-            fields="name,email,picture"
-            scope="public_profile,user_friends"
-            callback={responseFacebook}
-            icon="fa-facebook"
-          /> */}
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </form>
+      
+
+      <ul className="product-grid">
+        {filteredProducts.map((product) => (
+          <li
+            key={product.id}
+            className="product-item"
+            onClick={() => handleProductClick(product)}
+          >
+            <div className="row">
+              <div className="column">
+                <div className="product-content">
+                  <span className="bg animated fadeInDown">
+                    {product.category}
+                  </span>
+                  <h2>{product.title}</h2>
+                  <p>{product.description}</p>
+                  <div className="button">
+                    <a href="#">${product.price}</a>
+                    <a className="cart-btn" href="#">
+                      <i className="cart-icon ion-bag"></i>ADD TO CART
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="column2">
+                <img src={product.image} alt="Product" />
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Product Details"
+      >
+        {selectedProduct && (
+          <div>
+            {/* <h2>{selectedProduct.title}</h2>
+            <p>{selectedProduct.description}</p> */}
+            <div className="row">
+              <div className="modal-column">
+                <div className="modal-product-content">
+                  <span className="bg animated fadeInDown">
+                    {selectedProduct.category}
+                  </span>
+                  <h2>{selectedProduct.title}</h2>
+                  <p className="modal-description">
+                    {selectedProduct.description}
+                  </p>
+                  <div className="button">
+                    <a href="#">${selectedProduct.price}</a>
+                    <a className="cart-btn" href="#">
+                      <i className="cart-icon ion-bag"></i>ADD TO CART
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="column2">
+                <img
+                  className="modal-img"
+                  src={selectedProduct.image}
+                  alt="Product"
+                />
+              </div>
+            </div>
+            <button onClick={closeModal}>Close</button>
+          </div>
+        )}
+      </Modal>
+      <Modal
+        isOpen={isFormOpen}
+        onRequestClose={() => setIsFormOpen(false)}
+        contentLabel="Add Product"
+      >
+        <AddProductForm onAddProduct={handleAddProduct} onClose={() => setIsFormOpen(false)} />
+      </Modal>
     </div>
   );
 };
 
-export default Login;
+export default Products;

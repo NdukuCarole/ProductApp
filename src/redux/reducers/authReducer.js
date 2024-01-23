@@ -1,11 +1,36 @@
-const authReducer = (state = null, action) => {
-    switch (action.type) {
-      case 'SIGN_IN':
-        return action.payload;
-      default:
-        return state;
-    }
-  };
-  
-  export default authReducer;
-  
+// src/redux/reducers.js
+const initialState = {
+  isLoggedIn: false,
+  user: null,
+  error: null
+};
+
+const authReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        isLoggedIn: true,
+        user: action.payload.user,
+        error: null
+      };
+    case 'LOGIN_FAILURE':
+      return {
+        ...state,
+        isLoggedIn: false,
+        user: null,
+        error: action.payload.error
+      };
+    case 'LOGOUT':
+      return {
+        ...state,
+        isLoggedIn: false,
+        user: null,
+        error: null
+      };
+    default:
+      return state;
+  }
+};
+
+export default authReducer;

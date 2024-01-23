@@ -40,7 +40,7 @@ export const login = (username, password) => async (dispatch) => {
 
 export const signIn = (credentials) => async (dispatch) => {
   try {
-    const response = await fetch('https://fakestoreapi.com/auth/login', {
+    const response = await fetch('https://fakestoreapi.com/auth/login',{mode:'cors'}, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

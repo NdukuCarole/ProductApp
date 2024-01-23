@@ -35,11 +35,13 @@ const Login = () => {
   // };
 
   React.useEffect(() => {
+    console.log('useEffect triggered:', isLoggedIn);
     if (isLoggedIn) {
-      console.log(isLoggedIn)
+      console.log('Redirecting to /dashboard');
       navigate('/dashboard');
     }
-  }, [isLoggedIn, navigate])
+  }, [isLoggedIn, navigate]);
+  
 
   return (
     <div className="login-container">
@@ -67,6 +69,8 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></input>
+        {/* <button onClick={() => navigate('/dashboard')}>Go to Dashboard</button> */}
+
 
         <button onClick={handleLogin}>
           {" "}
