@@ -95,12 +95,13 @@ const Login = () => {
             size="40px"
           />
         </div>
-        <div className="social">
+    
+        <div className="social2">
           <GoogleLogin
             className="google-login"
             clientId="1097806336705-j087fpku79nfn74j967klbtf4dbvju08.apps.googleusercontent.com"
             render={(renderProps) => (
-              <button onClick={renderProps.onClick}>Sign in with Google</button>
+              <button className="googleLogin" onClick={renderProps.onClick} st>Login with Google</button>
             )}
             buttonText="Sign in with Google"
             icon="fa-facebook"
