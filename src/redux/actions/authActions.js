@@ -33,6 +33,7 @@ export const login = (username, password) => async (dispatch) => {
 
 export const logout = () => async () => {
   localStorage.removeItem("token");
+  window.location.reload()
 };
 
 export const signInWithGoogleAction = () => async (dispatch) => {

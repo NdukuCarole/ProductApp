@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "./styles.css";
 import FacebookLogin from "react-facebook-login";
+import { GoogleLogin } from "react-google-login";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import { login } from "../../redux/actions/authActions";
 
@@ -20,16 +21,23 @@ const Login = () => {
   const { isLoggedIn, error } = useSelector((state) => state);
 
   const handleLogin = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     dispatch(login(username, password));
+  };
+
+  const responseGoogle = (response) => {
+    console.log(response);
+    // Handle the Google login response
   };
 
   const responseFacebook = (response) => {
     console.log(response);
     setData(response);
-    setPicture(response.picture.data.url);
+    if (response.picture) {
+      setPicture(response.picture.data.url);
+    }
     if (response.accessToken) {
-      localStorage.setItem('token', response.accessToken);
+      localStorage.setItem("token", response.accessToken);
       setfbLogin(true);
     } else {
       setfbLogin(false);
@@ -37,13 +45,12 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    console.log('useEffect triggered:', isLoggedIn);
-    if (isLoggedIn || localStorage.getItem('token') !== null) {
-      console.log('Redirecting to /dashboard');
-      navigate('/dashboard');
+    console.log("useEffect triggered:", isLoggedIn);
+    if (isLoggedIn || localStorage.getItem("token") !== null) {
+      console.log("Redirecting to /dashboard");
+      navigate("/dashboard");
     }
   }, [isLoggedIn, navigate]);
-  
 
   return (
     <div className="login-container">
@@ -71,28 +78,35 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></input>
-       
-
 
         <button onClick={handleLogin}>
           {" "}
           {isLoading ? "Logging in..." : "Log In"}
         </button>
         <div className="social">
-          {/* <div class="go">
-            <i class="fab fa-google"></i>Sign In Google
-          </div>
-          <div class="fb">
-            <i class="fab fa-facebook"></i>Sign In Facebook
-          </div> */}
-
           <FacebookLogin
+            cssClass="facebook-button"
             appId="339549065583499"
             autoLoad={true}
             fields="name,email,picture"
             scope="public_profile,user_friends"
             callback={responseFacebook}
             icon="fa-facebook"
+            size="40px"
+          />
+        </div>
+        <div className="social">
+          <GoogleLogin
+            className="google-login"
+            clientId="1097806336705-j087fpku79nfn74j967klbtf4dbvju08.apps.googleusercontent.com"
+            render={(renderProps) => (
+              <button onClick={renderProps.onClick}>Sign in with Google</button>
+            )}
+            buttonText="Sign in with Google"
+            icon="fa-facebook"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={"single_host_origin"}
           />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
