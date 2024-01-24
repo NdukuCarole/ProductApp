@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import {  useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+// import { useDispatch } from "react-redux";
 
+const EditProductForm = ({ product, onEditProduct, onClose }) => {
+  // const dispatch = useDispatch();
 
-const AddProductForm = ({ onAddProduct, onClose }) => {
-  const { successMessage } = useSelector((state) => state.products);
   const [formData, setFormData] = useState({
     title: "",
     price: 0,
@@ -12,34 +12,30 @@ const AddProductForm = ({ onAddProduct, onClose }) => {
     category: "",
   });
 
+  useEffect(() => {
+
+    setFormData({
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      image: product.image,
+      category: product.category,
+    });
+  }, [product]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const handleCategoryChange = (e) => {
-    const { value } = e.target;
-    setFormData({ ...formData, category: value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onAddProduct(formData);
-
-    setFormData({
-      title: "",
-      price: 0,
-      description: "",
-      image: "",
-      category: "",
-    });
-
-    // onClose();
+    onEditProduct(formData);
+    onClose();
   };
 
   return (
     <form onSubmit={handleSubmit} className="inputForm">
-        {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <label>Title</label>
       <input
         type="text"
@@ -77,22 +73,21 @@ const AddProductForm = ({ onAddProduct, onClose }) => {
       />
 
       <label>Category</label>
-
       <select
         value={formData.category}
-        onChange={handleCategoryChange}
+        onChange={handleChange}
         className="select2"
+        name="category"
       >
-        <option value="">Select Category</option>
         <option value="electronics">Electronics</option>
         <option value="jewelery">Jewelery</option>
         <option value="men's clothing">Men's Clothing</option>
         <option value="women's clothing">Women's Clothing</option>
       </select>
 
-      <button type="submit">Add Product</button>
+      <button type="submit">Edit Product</button>
     </form>
   );
 };
 
-export default AddProductForm;
+export default EditProductForm;

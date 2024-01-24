@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, fetchProducts } from "../../redux/actions/productActions";
+
+import {
+  addProduct,
+  fetchProducts,
+  editProduct,
+  deleteProduct,
+} from "../../redux/actions/productActions";
 import "./styles.css";
 import Modal from "react-modal";
 import AddProductForm from "./AddProductForm";
+import EditProductForm from "./EditProductForm";
+
+Modal.setAppElement("#root");
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -14,12 +23,32 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [selectedProductForEdit, setSelectedProductForEdit] = useState(null);
   const handleOpenForm = () => {
     setIsFormOpen(true);
   };
 
+  const openEditForm = (product) => {
+    setSelectedProductForEdit(product);
+    setIsEditFormOpen(true);
+    setIsModalOpen(false);
+  };
+
+  const handleEditProduct = (updatedProduct) => {
+    dispatch(editProduct(selectedProductForEdit.id, updatedProduct));
+
+    setIsEditFormOpen(false);
+  };
+
   const handleCloseForm = () => {
     setIsFormOpen(false);
+  };
+
+  const handleDeleteProduct = (productId) => {
+    dispatch(deleteProduct(productId));
+    closeModal();
   };
 
   useEffect(() => {
@@ -45,7 +74,6 @@ const Products = () => {
   };
 
   const handleAddProduct = (newProduct) => {
-   
     dispatch(addProduct(newProduct));
 
     setIsFormOpen(false);
@@ -65,13 +93,16 @@ const Products = () => {
       <div className="sort">
         <label className="label">Sort By:</label>
         <select className="select" onChange={(e) => handleSort(e.target.value)}>
+          <option value="">All</option>
           <option value="title">Title</option>
           <option value="price">Price</option>
-          <option value="">All</option>
         </select>
 
         <label className="label2">Filter By Category:</label>
-        <select className="select" onChange={(e) => handleFilter(e.target.value)}>
+        <select
+          className="select"
+          onChange={(e) => handleFilter(e.target.value)}
+        >
           <option value="">All</option>
 
           {Array.from(new Set(products.map((product) => product.category))).map(
@@ -86,8 +117,6 @@ const Products = () => {
           Add Product
         </button>
       </div>
-
-      
 
       <ul className="product-grid">
         {filteredProducts.map((product) => (
@@ -145,6 +174,27 @@ const Products = () => {
                       <i className="cart-icon ion-bag"></i>ADD TO CART
                     </a>
                   </div>
+
+                  <div className="button">
+                    <button
+                      className="button-4"
+                      role="button"
+                      onClick={openEditForm.bind(null, selectedProduct)}
+                    >
+                      Edit Product
+                    </button>
+
+                    <button
+                      className="button-5"
+                      role="button"
+                      onClick={handleDeleteProduct.bind(
+                        null,
+                        selectedProduct.id
+                      )}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="column2">
@@ -160,12 +210,31 @@ const Products = () => {
         )}
       </Modal>
       <Modal
+        className="addProdModal"
         isOpen={isFormOpen}
         onRequestClose={() => setIsFormOpen(false)}
         contentLabel="Add Product"
       >
-        <AddProductForm onAddProduct={handleAddProduct} onClose={() => setIsFormOpen(false)} />
+        <AddProductForm
+          onAddProduct={handleAddProduct}
+          onClose={() => setIsFormOpen(false)}
+        />
       </Modal>
+
+      {isEditFormOpen && selectedProductForEdit && (
+        <Modal
+          className="addProdModal"
+          isOpen={isEditFormOpen}
+          onRequestClose={() => setIsEditFormOpen(false)}
+          contentLabel="Edit Product"
+        >
+          <EditProductForm
+            product={selectedProductForEdit}
+            onEditProduct={handleEditProduct}
+            onClose={() => setIsEditFormOpen(false)}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

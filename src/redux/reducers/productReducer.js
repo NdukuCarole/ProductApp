@@ -1,6 +1,7 @@
 const initialState = {
   products: [],
   error: null,
+  successMessage: "",
 };
 
 const productReducer = (state = initialState, action) => {
@@ -22,6 +23,17 @@ const productReducer = (state = initialState, action) => {
         ...state,
         products: [...state.products, action.payload.product],
         error: null,
+        successMessage: action.payload.message,
+      };
+
+    case "EDIT_PRODUCT":
+      const editedProduct = action.payload.product;
+
+      return {
+        ...state,
+        products: state.products.map((product) =>
+          product.id === editedProduct.id ? editedProduct : product
+        ),
       };
     default:
       return state;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
-// import FacebookLogin from "react-facebook-login";
+import FacebookLogin from "react-facebook-login";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from 'react-router-dom';
@@ -11,9 +11,10 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  // const [data, setData] = useState({});
-  // const [picture, setPicture] = useState("");
+  const [data, setData] = useState({});
+  const [picture, setPicture] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [fbLogin, setfbLogin] = useState(false);
 
   const dispatch = useDispatch();
   const { isLoggedIn, error } = useSelector((state) => state);
@@ -23,16 +24,17 @@ const Login = () => {
     dispatch(login(username, password));
   };
 
-  // const responseFacebook = (response) => {
-  //   console.log(response);
-  //   setData(response);
-  //   setPicture(response.picture.data.url);
-  //   if (response.accessToken) {
-  //     setLogin(true);
-  //   } else {
-  //     setLogin(false);
-  //   }
-  // };
+  const responseFacebook = (response) => {
+    console.log(response);
+    setData(response);
+    setPicture(response.picture.data.url);
+    if (response.accessToken) {
+      localStorage.setItem('token', response.accessToken);
+      setfbLogin(true);
+    } else {
+      setfbLogin(false);
+    }
+  };
 
   React.useEffect(() => {
     console.log('useEffect triggered:', isLoggedIn);
@@ -69,7 +71,7 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></input>
-        {/* <button onClick={() => navigate('/dashboard')}>Go to Dashboard</button> */}
+       
 
 
         <button onClick={handleLogin}>
@@ -84,14 +86,14 @@ const Login = () => {
             <i class="fab fa-facebook"></i>Sign In Facebook
           </div> */}
 
-          {/* <FacebookLogin
+          <FacebookLogin
             appId="339549065583499"
             autoLoad={true}
             fields="name,email,picture"
             scope="public_profile,user_friends"
             callback={responseFacebook}
             icon="fa-facebook"
-          /> */}
+          />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
