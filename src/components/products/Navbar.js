@@ -8,7 +8,9 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    window.location.replace('https://65b165b1471f443ae45101f8--jolly-souffle-4ae459.netlify.app/')
     window.location.reload();
+
   };
 
   return (
