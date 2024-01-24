@@ -1,5 +1,6 @@
 import { signInWithGoogle } from "../../services/authService";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 export const login = (username, password) => async (dispatch) => {
   try {
@@ -35,8 +36,11 @@ export const login = (username, password) => async (dispatch) => {
 };
 
 export const logout = () => async () => {
+  const navigate = useNavigate();
   localStorage.removeItem("token");
-  window.location.reload()
+  navigate.push('/')
+ 
+  
 };
 
 export const signInWithGoogleAction = () => async (dispatch) => {
