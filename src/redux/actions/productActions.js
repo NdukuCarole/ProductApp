@@ -73,12 +73,12 @@ export const editProduct = (productId, updatedProduct) => async (dispatch) => {
       payload: { product: editedProduct },
     });
 
-    // Show a success toast
+  
     toast.success("Product edited successfully");
   } catch (error) {
     console.error("Error editing product:", error);
 
-    // Show an error toast
+ 
     toast.error("Failed to edit product");
   }
 };

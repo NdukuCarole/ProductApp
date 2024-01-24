@@ -38,7 +38,7 @@ const Login = () => {
 
   React.useEffect(() => {
     console.log('useEffect triggered:', isLoggedIn);
-    if (isLoggedIn) {
+    if (isLoggedIn || localStorage.getItem('token') !== null) {
       console.log('Redirecting to /dashboard');
       navigate('/dashboard');
     }

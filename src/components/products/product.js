@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Navbar from "./Navbar";
 
 import {
   addProduct,
@@ -87,7 +88,8 @@ const Products = () => {
 
   return (
     <div>
-      <h2>Products</h2>
+      {/* <h2>Products</h2> */}
+      <Navbar />
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div className="sort">

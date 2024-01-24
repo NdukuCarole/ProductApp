@@ -39,6 +39,7 @@ const AddProductForm = ({ onAddProduct, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit} className="inputForm">
+      <h2>Add Product</h2>
         {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <label>Title</label>
       <input

@@ -13,7 +13,6 @@ const EditProductForm = ({ product, onEditProduct, onClose }) => {
   });
 
   useEffect(() => {
-
     setFormData({
       title: product.title,
       price: product.price,
@@ -36,6 +35,7 @@ const EditProductForm = ({ product, onEditProduct, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit} className="inputForm">
+      <h2> Edit Product</h2>
       <label>Title</label>
       <input
         type="text"

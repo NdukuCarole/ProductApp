@@ -35,6 +35,12 @@ const productReducer = (state = initialState, action) => {
           product.id === editedProduct.id ? editedProduct : product
         ),
       };
+    case "LOGOUT":
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
     default:
       return state;
   }

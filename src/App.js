@@ -11,7 +11,7 @@ function App() {
     <Router>
       <ToastContainer />
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
 
         <Route exact path="/" element={<ProtectedRoute />}>
           <Route exact path="/dashboard" element={<Product />} />
