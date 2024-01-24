@@ -20,9 +20,17 @@ const Login = () => {
   const dispatch = useDispatch();
   const { isLoggedIn, error } = useSelector((state) => state);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    dispatch(login(username, password));
+    setIsLoading(true);
+
+    try {
+      await dispatch(login(username, password));
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const responseGoogle = (response) => {
@@ -95,13 +103,15 @@ const Login = () => {
             size="40px"
           />
         </div>
-    
+
         <div className="social2">
           <GoogleLogin
             className="google-login"
             clientId="1097806336705-j087fpku79nfn74j967klbtf4dbvju08.apps.googleusercontent.com"
             render={(renderProps) => (
-              <button className="googleLogin" onClick={renderProps.onClick} st>Login with Google</button>
+              <button className="googleLogin" onClick={renderProps.onClick} st>
+                Login with Google
+              </button>
             )}
             buttonText="Sign in with Google"
             icon="fa-facebook"

@@ -14,11 +14,15 @@ const Navbar = () => {
   return (
     <div class="topnav">
       <div class="topnav-left">
-        <a href="">Products</a>
+        <a href="" className="logo">
+          Products
+        </a>
       </div>
 
       <div class="topnav-right" onClick={handleLogout}>
-        <a href="">Logout</a>
+        <div className="logout-button">
+          <i class="cis-account-logout"></i>Logout
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { signInWithGoogle } from "../../services/authService";
+import { toast } from "react-toastify";
 
 export const login = (username, password) => async (dispatch) => {
   try {
@@ -20,10 +21,12 @@ export const login = (username, password) => async (dispatch) => {
       type: "LOGIN_SUCCESS",
       payload: {},
     });
+    toast.success("Successful Login");
 
     localStorage.setItem("token", token);
     window.location.reload()
   } catch (error) {
+    toast.error("Failed to Login");
     dispatch({
       type: "LOGIN_FAILURE",
       payload: { error: error.message },
