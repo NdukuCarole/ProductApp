@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "./styles.css";
 import FacebookLogin from "react-facebook-login";
-import { GoogleLogin } from "react-google-login";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 
-import { login } from "../../redux/actions/authActions";
+import { login, googleLogin } from "../../redux/actions/authActions";
+import GoogleAuth from "./google-auth";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -34,7 +35,11 @@ const Login = () => {
   };
 
   const responseGoogle = (response) => {
+    dispatch(googleLogin(
+      response.access_token
+      ));
     console.log(response);
+    return;
     // Handle the Google login response
   };
 
@@ -105,20 +110,7 @@ const Login = () => {
         </div>
 
         <div className="social2">
-          <GoogleLogin
-            className="google-login"
-            clientId="1097806336705-j087fpku79nfn74j967klbtf4dbvju08.apps.googleusercontent.com"
-            render={(renderProps) => (
-              <button className="googleLogin" onClick={renderProps.onClick} st>
-                Login with Google
-              </button>
-            )}
-            buttonText="Sign in with Google"
-            icon="fa-facebook"
-            onSuccess={responseGoogle}
-            onFailure={responseGoogle}
-            cookiePolicy={"single_host_origin"}
-          />
+          <GoogleAuth responseGoogle={responseGoogle} className="googleLogin" />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>

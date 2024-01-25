@@ -125,12 +125,16 @@ button {
 
 .googleLogin {
    
-    margin-top: 10px;
     width: 400px;
     /* margin-left: -40x; */
     background-color: #3aab58;
     color: white;
     font-size: 13px;
+    cursor: pointer;
+    padding: 5px;
+    text-align: center;
+    border-radius: 4px;
+    margin: 10px 0 10px 0;
   }
 
   .social2 {

@@ -38,6 +38,9 @@ export const login = (username, password) => async (dispatch) => {
 export const logout = () => async () => {
   localStorage.removeItem("token");
 };
+export const googleLogin = (token) => async () => {
+  localStorage.setItem("token", token);
+};
 
 export const signInWithGoogleAction = () => async (dispatch) => {
   try {
